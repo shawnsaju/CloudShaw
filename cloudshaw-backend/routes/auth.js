@@ -88,6 +88,21 @@ router.post(
   }
 );
 
+// ── POST /api/auth/check-email ──────────────────────────────────────────────
+router.post('/check-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, error: 'Email is required' });
+    }
+
+    const existing = await User.findOne({ email: email.toLowerCase().trim() });
+    res.json({ success: true, exists: !!existing });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // ── GET /api/auth/me ─────────────────────────────────────────────────────────
 const { protect } = require('../middleware/auth');
 router.get('/me', protect, (req, res) => {

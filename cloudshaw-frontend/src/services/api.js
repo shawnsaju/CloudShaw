@@ -33,6 +33,7 @@ api.interceptors.response.use(
 export const authApi = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
+  checkEmail: (email) => api.post('/auth/check-email', { email }),
   me: () => api.get('/auth/me'),
 };
 

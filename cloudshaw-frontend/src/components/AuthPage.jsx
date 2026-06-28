@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { authApi } from '../services/api';
 import toast from 'react-hot-toast';
 
 export default function AuthPage() {
@@ -8,12 +9,38 @@ export default function AuthPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [emailExists, setEmailExists] = useState(false);
+  const [checkingEmail, setCheckingEmail] = useState(false);
+
+  // Real-time email validation for register mode
+  useEffect(() => {
+    if (mode !== 'register' || !form.email.trim() || !/^\S+@\S+\.\S+$/.test(form.email)) {
+      setEmailExists(false);
+      return;
+    }
+
+    const checkEmail = async () => {
+      setCheckingEmail(true);
+      try {
+        const res = await authApi.checkEmail(form.email);
+        setEmailExists(res.data.exists);
+      } catch (err) {
+        console.error('Error checking email:', err);
+      } finally {
+        setCheckingEmail(false);
+      }
+    };
+
+    const timer = setTimeout(checkEmail, 500);
+    return () => clearTimeout(timer);
+  }, [form.email, mode]);
 
   const validate = () => {
     const errs = {};
     if (mode === 'register' && !form.name.trim()) errs.name = 'Name is required';
     if (!form.email.trim()) errs.email = 'Email is required';
     else if (!/^\S+@\S+\.\S+$/.test(form.email)) errs.email = 'Valid email required';
+    else if (emailExists && mode === 'register') errs.email = 'This email is already registered';
     if (!form.password) errs.password = 'Password is required';
     else if (form.password.length < 6) errs.password = 'Password must be at least 6 characters';
     setErrors(errs);
@@ -112,17 +139,44 @@ export default function AuthPage() {
             {/* Email */}
             <div style={{ marginBottom: '1.1rem' }}>
               <label className="label">Email</label>
-              <input
-                id="auth-email"
-                className="input"
-                type="email"
-                placeholder="you@example.com"
-                value={form.email}
-                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                style={errors.email ? { borderColor: 'var(--danger)' } : {}}
-                autoFocus={mode === 'login'}
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  id="auth-email"
+                  className="input"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                  style={{
+                    borderColor: (errors.email || emailExists) ? 'var(--danger)' : '',
+                    paddingRight: checkingEmail ? '2.5rem' : '0.75rem',
+                  }}
+                  autoFocus={mode === 'login'}
+                />
+                {mode === 'register' && checkingEmail && (
+                  <div style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    fontSize: '0.9rem',
+                  }}>⏳</div>
+                )}
+              </div>
               {errors.email && <p style={{ margin: '0.3rem 0 0', fontSize: '0.78rem', color: 'var(--danger)' }}>{errors.email}</p>}
+              {mode === 'register' && emailExists && !errors.email && (
+                <p style={{
+                  margin: '0.3rem 0 0',
+                  fontSize: '0.78rem',
+                  color: 'var(--danger)',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                }}>
+                  ⚠️ This email is already registered
+                </p>
+              )}
             </div>
 
             {/* Password */}
