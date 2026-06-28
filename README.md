@@ -1,4 +1,4 @@
-# ☁️ CloudShaw v2
+# ☁️ CloudShaw
 
 **CloudShaw** is a personal cloud media vault and social content management hub. Organize your photos and videos into platform-specific folders, add captions and hashtags, schedule posts, and track what's been uploaded — all from one sleek, dark-themed dashboard.
 
