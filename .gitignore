@@ -10,6 +10,8 @@ cloudshaw-backend/.env
 cloudshaw-backend/.env.*
 !cloudshaw-backend/.env.example
 
+cloudshaw-backend/uploads/*
+!cloudshaw-backend/uploads/.gitkeep
 
 # Logs
 cloudshaw-backend/logs/
