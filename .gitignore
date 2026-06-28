@@ -1,0 +1,67 @@
+# ========================
+# Backend
+# ========================
+
+# Dependencies
+cloudshaw-backend/node_modules/
+
+# Environment variables (contains secrets/API keys)
+cloudshaw-backend/.env
+cloudshaw-backend/.env.*
+!cloudshaw-backend/.env.example
+
+
+# Logs
+cloudshaw-backend/logs/
+cloudshaw-backend/*.log
+cloudshaw-backend/npm-debug.log*
+cloudshaw-backend/yarn-debug.log*
+cloudshaw-backend/yarn-error.log*
+
+# ========================
+# Frontend
+# ========================
+
+# Dependencies
+cloudshaw-frontend/node_modules/
+
+# Build output
+cloudshaw-frontend/dist/
+cloudshaw-frontend/dist-ssr/
+
+# Local env files
+cloudshaw-frontend/*.local
+cloudshaw-frontend/.env
+cloudshaw-frontend/.env.*
+!cloudshaw-frontend/.env.example
+
+# Logs
+cloudshaw-frontend/logs/
+cloudshaw-frontend/*.log
+cloudshaw-frontend/npm-debug.log*
+cloudshaw-frontend/yarn-debug.log*
+cloudshaw-frontend/yarn-error.log*
+cloudshaw-frontend/pnpm-debug.log*
+cloudshaw-frontend/lerna-debug.log*
+
+# ========================
+# Editor & OS files
+# ========================
+
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ========================
+# AI / Agent config
+# ========================
+
+.agents/
